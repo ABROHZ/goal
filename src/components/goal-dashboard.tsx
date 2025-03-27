@@ -286,6 +286,50 @@ export default function GoalDashboard() {
     );
   };
 
+  const handleDeleteGoal = async (goalId: string) => {
+    try {
+      // Call the delete-goal function
+      const { error } = await supabase.functions.invoke(
+        "supabase-functions-delete-goal",
+        {
+          body: { goalId },
+        },
+      );
+
+      if (error) {
+        console.error("Error deleting goal:", error);
+        toast({
+          title: "Error deleting goal",
+          description: error.message,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      // Remove the goal from the local state
+      setGoals(goals.filter((goal) => goal.id !== goalId));
+
+      // If we're in the detail view of the deleted goal, go back to the dashboard
+      if (selectedGoalId === goalId) {
+        setSelectedGoalId(null);
+      }
+
+      toast({
+        title: "Goal deleted",
+        description: "Your goal has been deleted successfully",
+      });
+      return true;
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error deleting goal",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   // If a goal is selected, show its details
   if (selectedGoal) {
     return (
@@ -294,6 +338,7 @@ export default function GoalDashboard() {
         onBack={() => setSelectedGoalId(null)}
         onLogProgress={handleLogProgress}
         onToggleMilestone={handleToggleMilestone}
+        onDeleteGoal={handleDeleteGoal}
       />
     );
   }
@@ -348,6 +393,7 @@ export default function GoalDashboard() {
                   goal={goal}
                   onLogProgress={handleLogProgress}
                   onViewDetails={(id) => setSelectedGoalId(id)}
+                  onDeleteGoal={handleDeleteGoal}
                 />
               ))}
             </div>
@@ -381,6 +427,7 @@ export default function GoalDashboard() {
                     goal={goal}
                     onLogProgress={handleLogProgress}
                     onViewDetails={(id) => setSelectedGoalId(id)}
+                    onDeleteGoal={handleDeleteGoal}
                   />
                 ))}
             </div>
@@ -412,6 +459,7 @@ export default function GoalDashboard() {
                     goal={goal}
                     onLogProgress={handleLogProgress}
                     onViewDetails={(id) => setSelectedGoalId(id)}
+                    onDeleteGoal={handleDeleteGoal}
                   />
                 ))}
             </div>

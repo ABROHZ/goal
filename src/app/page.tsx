@@ -23,7 +23,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
 
@@ -31,10 +31,10 @@ export default async function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-3xl font-bold text-black mb-4">
               Why Track Your Goals With Us
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-black max-w-2xl mx-auto">
               Our goal tracking platform helps you visualize progress, maintain
               consistency, and achieve meaningful results through an intuitive
               interface.
@@ -71,8 +71,10 @@ export default async function Home() {
                 className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="text-blue-600 mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-black mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-black">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -103,8 +105,10 @@ export default async function Home() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">How Goal Wave Works</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold text-black mb-4">
+              How Goal Wave Works
+            </h2>
+            <p className="text-black max-w-2xl mx-auto">
               Our unique wave-like visualization makes tracking progress
               intuitive and satisfying.
             </p>
@@ -115,8 +119,10 @@ export default async function Home() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">1</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Set Your Goal</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold text-black mb-2">
+                Set Your Goal
+              </h3>
+              <p className="text-black">
                 Define your goal and break it down into achievable milestones
                 along your journey.
               </p>
@@ -126,10 +132,10 @@ export default async function Home() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">
+              <h3 className="text-xl font-semibold text-black mb-2">
                 Track Daily Progress
               </h3>
-              <p className="text-gray-600">
+              <p className="text-black">
                 Log your daily progress with a simple click and watch your
                 consistency streak grow.
               </p>
@@ -139,8 +145,10 @@ export default async function Home() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                 <span className="text-blue-600 text-xl font-bold">3</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Visualize Success</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-semibold text-black mb-2">
+                Visualize Success
+              </h3>
+              <p className="text-black">
                 Watch your progress dot move along the wave map as you reach
                 milestones and achieve your goal.
               </p>
@@ -150,13 +158,13 @@ export default async function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-24 bg-gray-50" id="pricing">
+      <section className="py-24 bg-white" id="pricing">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-3xl font-bold text-black mb-4">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-black max-w-2xl mx-auto">
               Choose the perfect plan for your goal-setting journey.
             </p>
           </div>
@@ -171,10 +179,10 @@ export default async function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold text-black mb-4">
             Ready to Achieve Your Goals?
           </h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-black mb-8 max-w-2xl mx-auto">
             Join thousands of goal-setters who are visualizing their progress
             and celebrating their achievements.
           </p>
