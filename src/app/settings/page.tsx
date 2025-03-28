@@ -103,7 +103,10 @@ export default function SettingsPage() {
     } catch (error: any) {
       alert(`Error updating profile: ${error.message}`);
     } finally {
-      setSaving(false);
+      // Add a small delay to make the loading state more noticeable
+      setTimeout(() => {
+        setSaving(false);
+      }, 500);
     }
   };
 
@@ -127,13 +130,29 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-10">
+        <Button
+          variant="ghost"
+          className="mb-4 flex items-center gap-1 opacity-50 pointer-events-none"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+        </Button>
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-full bg-muted animate-pulse"></div>
+              Settings
+            </CardTitle>
             <CardDescription>
               Loading your profile information...
             </CardDescription>
           </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="h-8 bg-muted rounded animate-pulse"></div>
+              <div className="h-40 bg-muted rounded animate-pulse"></div>
+              <div className="h-20 bg-muted rounded animate-pulse"></div>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
@@ -305,8 +324,32 @@ export default function SettingsPage() {
           <Button variant="outline" onClick={() => router.back()}>
             Cancel
           </Button>
-          <Button onClick={handleSaveProfile} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
+          <Button
+            onClick={handleSaveProfile}
+            disabled={saving}
+            className="min-w-[120px] relative"
+          >
+            {saving ? (
+              <>
+                <span className="animate-pulse">Saving</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 flex space-x-1">
+                  <span
+                    className="h-1.5 w-1.5 bg-primary-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></span>
+                  <span
+                    className="h-1.5 w-1.5 bg-primary-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></span>
+                  <span
+                    className="h-1.5 w-1.5 bg-primary-foreground rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></span>
+                </span>
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </CardFooter>
       </Card>

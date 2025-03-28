@@ -57,9 +57,12 @@ export default function UserProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button variant="ghost" size="icon" className="rounded-full relative">
           {loading ? (
-            <UserCircle className="h-8 w-8" />
+            <div className="animate-pulse">
+              <UserCircle className="h-8 w-8 text-muted-foreground" />
+              <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-blue-500 animate-ping"></span>
+            </div>
           ) : (
             <Avatar>
               <AvatarImage

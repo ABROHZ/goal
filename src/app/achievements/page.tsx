@@ -45,16 +45,26 @@ export default function AchievementsPage() {
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUser(user);
-        // In a real app, you would fetch achievements from the database
-        // For now, we'll use mock data
-        setAchievements(getMockAchievements());
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          setUser(user);
+          // In a real app, you would fetch achievements from the database
+          // For now, we'll use mock data
+          // Add artificial delay to simulate network request
+          setTimeout(() => {
+            setAchievements(getMockAchievements());
+            setLoading(false);
+          }, 800);
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getUser();
@@ -148,11 +158,36 @@ export default function AchievementsPage() {
   if (loading) {
     return (
       <div className="container mx-auto py-10">
+        <Button
+          variant="ghost"
+          className="mb-4 flex items-center gap-1 opacity-50 pointer-events-none"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+        </Button>
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle>Achievements</CardTitle>
-            <CardDescription>Loading your achievements...</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-6 w-6 text-yellow-500 animate-pulse" />
+                  Achievements
+                </CardTitle>
+                <CardDescription>Loading your achievements...</CardDescription>
+              </div>
+              <div className="text-right">
+                <div className="h-8 w-16 bg-muted rounded animate-pulse"></div>
+                <div className="h-4 w-32 bg-muted rounded mt-1 animate-pulse"></div>
+              </div>
+            </div>
           </CardHeader>
+          <CardContent>
+            <div className="h-8 bg-muted rounded animate-pulse mb-6"></div>
+            <div className="space-y-4">
+              <div className="h-24 bg-muted rounded animate-pulse"></div>
+              <div className="h-24 bg-muted rounded animate-pulse"></div>
+              <div className="h-24 bg-muted rounded animate-pulse"></div>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );

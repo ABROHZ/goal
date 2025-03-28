@@ -26,7 +26,6 @@ export default async function Home() {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
-
       {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
@@ -80,9 +79,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* Stats Section */}
-      <section className="py-20 bg-blue-600 text-white">
+      <section className="py-20 text-white bg-[#000000]">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
@@ -100,7 +98,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* How It Works Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
@@ -156,7 +153,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* Pricing Section */}
       <section className="py-24 bg-white" id="pricing">
         <div className="container mx-auto px-4">
@@ -175,7 +171,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 text-center">
@@ -195,7 +190,6 @@ export default async function Home() {
           </a>
         </div>
       </section>
-
       <Footer />
     </div>
   );

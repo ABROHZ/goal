@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Target, Plus, Trash2, Calendar } from "lucide-react";
+import { Target, Plus, Trash2, Calendar, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar as CalendarComponent } from "./ui/calendar";
@@ -37,6 +37,7 @@ export default function GoalForm({
   const [description, setDescription] = useState("");
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addMilestone = () => {
     setMilestones([
@@ -66,28 +67,35 @@ export default function GoalForm({
     setMilestones(milestones.filter((milestone) => milestone.id !== id));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const goalData = {
-      title,
-      description,
-      milestones: milestones.filter((m) => m.title.trim() !== ""),
-      createdAt: new Date().toISOString(),
-      targetDate: date ? date.toISOString() : null,
-      progress: 0,
-      streak: 0,
-      lastUpdated: null,
-    };
-    onSubmit(goalData);
+    setIsSubmitting(true);
 
-    // Reset form
-    setTitle("");
-    setDescription("");
-    setMilestones([]);
-    setDate(new Date());
+    try {
+      const goalData = {
+        title,
+        description,
+        milestones: milestones.filter((m) => m.title.trim() !== ""),
+        createdAt: new Date().toISOString(),
+        targetDate: date ? date.toISOString() : null,
+        progress: 0,
+        streak: 0,
+        lastUpdated: null,
+      };
 
-    // Close the form
-    onClose();
+      await onSubmit(goalData);
+
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setMilestones([]);
+      setDate(new Date());
+
+      // Close the form
+      onClose();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -111,6 +119,7 @@ export default function GoalForm({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -122,6 +131,7 @@ export default function GoalForm({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -136,6 +146,7 @@ export default function GoalForm({
                     "w-full justify-start text-left font-normal",
                     !date && "text-muted-foreground",
                   )}
+                  disabled={isSubmitting}
                 >
                   <Calendar className="mr-2 h-4 w-4" />
                   {date ? format(date, "PPP") : "Select a date"}
@@ -161,6 +172,7 @@ export default function GoalForm({
                 size="sm"
                 onClick={addMilestone}
                 className="flex items-center gap-1"
+                disabled={isSubmitting}
               >
                 <Plus className="h-4 w-4" /> Add Milestone
               </Button>
@@ -186,6 +198,7 @@ export default function GoalForm({
                         onChange={(e) =>
                           updateMilestone(milestone.id, "title", e.target.value)
                         }
+                        disabled={isSubmitting}
                       />
                     </div>
                     <Textarea
@@ -200,6 +213,7 @@ export default function GoalForm({
                       }
                       rows={2}
                       className="text-sm"
+                      disabled={isSubmitting}
                     />
                   </div>
                   <Button
@@ -208,6 +222,7 @@ export default function GoalForm({
                     size="icon"
                     onClick={() => removeMilestone(milestone.id)}
                     className="text-gray-500 hover:text-red-500"
+                    disabled={isSubmitting}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -218,8 +233,19 @@ export default function GoalForm({
         </CardContent>
 
         <CardFooter className="fixed bottom-0 left-0 right-0 bg-white border-t pt-4 z-10">
-          <Button type="submit" className="w-full">
-            Create Goal
+          <Button
+            type="submit"
+            className="w-full gap-2"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Creating Goal...
+              </>
+            ) : (
+              <>Create Goal</>
+            )}
           </Button>
         </CardFooter>
       </form>

@@ -22,6 +22,7 @@ import {
   CheckCircle2,
   Trash2,
   PenLine,
+  Loader2,
 } from "lucide-react";
 import GoalProgressMap from "./goal-progress-map";
 
@@ -62,6 +63,11 @@ export default function GoalDetail({
   onDeleteGoal,
 }: GoalDetailProps) {
   const [progressNote, setProgressNote] = useState("");
+  const [isLoggingProgress, setIsLoggingProgress] = useState(false);
+  const [isDeletingGoal, setIsDeletingGoal] = useState(false);
+  const [isTogglingMilestone, setIsTogglingMilestone] = useState<string | null>(
+    null,
+  );
   const noteInputRef = useRef<HTMLTextAreaElement>(null);
   const completedMilestones = goal.milestones.filter((m) => m.completed).length;
   const totalMilestones = goal.milestones.length;
@@ -102,10 +108,27 @@ export default function GoalDetail({
           variant="destructive"
           size="sm"
           className="gap-1"
-          onClick={() => onDeleteGoal(goal.id)}
+          onClick={async () => {
+            setIsDeletingGoal(true);
+            try {
+              await onDeleteGoal(goal.id);
+            } finally {
+              setIsDeletingGoal(false);
+            }
+          }}
+          disabled={isDeletingGoal}
         >
-          <Trash2 className="h-4 w-4" />
-          Delete Goal
+          {isDeletingGoal ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Deleting...
+            </>
+          ) : (
+            <>
+              <Trash2 className="h-4 w-4" />
+              Delete Goal
+            </>
+          )}
         </Button>
       </div>
 
@@ -171,17 +194,29 @@ export default function GoalDetail({
                   key={milestone.id}
                   className="flex items-start gap-3 p-3 bg-gray-50 rounded-md"
                 >
-                  <Checkbox
-                    id={`milestone-${milestone.id}`}
-                    checked={milestone.completed}
-                    onCheckedChange={(checked) => {
-                      onToggleMilestone(
-                        goal.id,
-                        milestone.id,
-                        checked as boolean,
-                      );
-                    }}
-                  />
+                  {isTogglingMilestone === milestone.id ? (
+                    <div className="h-4 w-4 flex items-center justify-center">
+                      <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                    </div>
+                  ) : (
+                    <Checkbox
+                      id={`milestone-${milestone.id}`}
+                      checked={milestone.completed}
+                      onCheckedChange={async (checked) => {
+                        setIsTogglingMilestone(milestone.id);
+                        try {
+                          await onToggleMilestone(
+                            goal.id,
+                            milestone.id,
+                            checked as boolean,
+                          );
+                        } finally {
+                          setIsTogglingMilestone(null);
+                        }
+                      }}
+                      disabled={isTogglingMilestone !== null}
+                    />
+                  )}
                   <div className="space-y-1">
                     <label
                       htmlFor={`milestone-${milestone.id}`}
@@ -243,17 +278,30 @@ export default function GoalDetail({
           </div>
 
           <Button
-            onClick={() => {
-              onLogProgress(goal.id, progressNote);
-              setProgressNote("");
+            onClick={async () => {
+              if (isUpdatedToday() || isLoggingProgress) return;
+              setIsLoggingProgress(true);
+              try {
+                await onLogProgress(goal.id, progressNote);
+                setProgressNote("");
+              } catch (error) {
+                console.error("Error logging progress:", error);
+              } finally {
+                setIsLoggingProgress(false);
+              }
             }}
             className="w-full gap-2"
-            disabled={isUpdatedToday()}
+            disabled={isUpdatedToday() || isLoggingProgress}
           >
             {isUpdatedToday() ? (
               <>
                 <CheckCircle2 className="h-5 w-5" />
                 Progress Logged Today
+              </>
+            ) : isLoggingProgress ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Logging Progress...
               </>
             ) : (
               <>Log Daily Progress</>
