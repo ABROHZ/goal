@@ -1,57 +1,47 @@
 import Link from "next/link";
-import { ArrowUpRight, Check, Target } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { Button } from "./ui/button";
 
 export default function Hero() {
   return (
-    <div className="relative overflow-hidden bg-white">
-      <div className="relative pt-24 pb-32 sm:pt-32 sm:pb-40">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl sm:text-6xl font-bold text-black mb-8 tracking-tight">
-              Track <span className="text-blue-600">Goals</span> with Visual
-              Progress Maps
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
+      <div className="container px-4 md:px-6">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+              Track your <span className="text-primary">goals</span> with visual
+              progress
             </h1>
-
-            <p className="text-xl text-black mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
               Set meaningful goals, track daily progress, and visualize your
-              journey with our intuitive wave-like goal maps. Stay consistent
-              and celebrate milestones along the way.
+              journey with our intuitive goal maps.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center px-8 py-4 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium bg-[#000000]"
-              >
-                Start Tracking Goals
-                <ArrowUpRight className="ml-2 w-5 h-5" />
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button asChild size="lg">
+              <Link href="/dashboard">
+                Get started
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-
-              <Link
-                href="#pricing"
-                className="inline-flex items-center px-8 py-4 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-lg font-medium"
-              >
-                View Pricing
-              </Link>
-            </div>
-
-            <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-black">
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Visual progress tracking</span>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href="#pricing">View pricing</Link>
+            </Button>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+            {[
+              "Visual progress tracking",
+              "Daily consistency streaks",
+              "Milestone celebrations",
+            ].map((feature, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-primary" />
+                <span className="text-sm text-muted-foreground">{feature}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Daily consistency streaks</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Milestone celebrations</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

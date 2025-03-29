@@ -277,36 +277,44 @@ export default function GoalDetail({
             />
           </div>
 
-          <Button
-            onClick={async () => {
-              if (isUpdatedToday() || isLoggingProgress) return;
-              setIsLoggingProgress(true);
-              try {
-                await onLogProgress(goal.id, progressNote);
-                setProgressNote("");
-              } catch (error) {
-                console.error("Error logging progress:", error);
-              } finally {
-                setIsLoggingProgress(false);
-              }
-            }}
-            className="w-full gap-2"
-            disabled={isUpdatedToday() || isLoggingProgress}
-          >
-            {isUpdatedToday() ? (
-              <>
-                <CheckCircle2 className="h-5 w-5" />
-                Progress Logged Today
-              </>
-            ) : isLoggingProgress ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Logging Progress...
-              </>
-            ) : (
-              <>Log Daily Progress</>
-            )}
-          </Button>
+          {progressPercentage < 100 && (
+            <Button
+              onClick={async () => {
+                if (isUpdatedToday() || isLoggingProgress) return;
+                setIsLoggingProgress(true);
+                try {
+                  await onLogProgress(goal.id, progressNote);
+                  setProgressNote("");
+                } catch (error) {
+                  console.error("Error logging progress:", error);
+                } finally {
+                  setIsLoggingProgress(false);
+                }
+              }}
+              className="w-full gap-2"
+              disabled={isUpdatedToday() || isLoggingProgress}
+            >
+              {isUpdatedToday() ? (
+                <>
+                  <CheckCircle2 className="h-5 w-5" />
+                  Progress Logged Today
+                </>
+              ) : isLoggingProgress ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Logging Progress...
+                </>
+              ) : (
+                <>Log Daily Progress</>
+              )}
+            </Button>
+          )}
+          {progressPercentage >= 100 && (
+            <div className="w-full p-3 bg-green-50 rounded-md text-green-700 flex items-center justify-center gap-2">
+              <Award className="h-5 w-5" />
+              <span className="font-medium">Goal Completed!</span>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </div>

@@ -5,149 +5,111 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-50 border-t border-gray-100">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          {/* Product Column */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
-            <ul className="space-y-2">
-              <li>
+    <footer className="border-t bg-background">
+      <div className="container py-10 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium">Product</h3>
+            <nav className="flex flex-col space-y-2">
+              {[
+                { name: "Features", href: "#features" },
+                { name: "Pricing", href: "#pricing" },
+                { name: "My Goals", href: "/dashboard" },
+                { name: "Plans", href: "/pricing" },
+              ].map((item) => (
                 <Link
-                  href="#features"
-                  className="text-gray-600 hover:text-blue-600"
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  Features
+                  {item.name}
                 </Link>
-              </li>
-              <li>
-                <Link
-                  href="#pricing"
-                  className="text-gray-600 hover:text-blue-600"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/dashboard"
-                  className="text-gray-600 hover:text-blue-600"
-                >
-                  My Goals
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-gray-600 hover:text-blue-600"
-                >
-                  Plans
-                </Link>
-              </li>
-            </ul>
+              ))}
+            </nav>
           </div>
 
-          {/* Resources Column */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Goal Setting Guide
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium">Resources</h3>
+            <nav className="flex flex-col space-y-2">
+              {[
+                { name: "Goal Setting Guide", href: "#" },
+                { name: "Habit Building Tips", href: "#" },
+                { name: "Success Stories", href: "#" },
+                { name: "FAQ", href: "#" },
+              ].map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {item.name}
                 </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Habit Building Tips
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Success Stories
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  FAQ
-                </Link>
-              </li>
-            </ul>
+              ))}
+            </nav>
           </div>
 
-          {/* Company Column */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  About Us
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium">Company</h3>
+            <nav className="flex flex-col space-y-2">
+              {[
+                { name: "About Us", href: "#" },
+                { name: "Blog", href: "#" },
+                { name: "Careers", href: "#" },
+                { name: "Contact", href: "#" },
+              ].map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {item.name}
                 </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Contact
-                </Link>
-              </li>
-            </ul>
+              ))}
+            </nav>
           </div>
 
-          {/* Legal Column */}
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Privacy Policy
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium">Legal</h3>
+            <nav className="flex flex-col space-y-2">
+              {[
+                { name: "Privacy Policy", href: "#" },
+                { name: "Terms of Service", href: "#" },
+                { name: "Cookie Policy", href: "#" },
+                { name: "GDPR", href: "#" },
+              ].map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {item.name}
                 </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  Cookie Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-gray-600 hover:text-blue-600">
-                  GDPR
-                </Link>
-              </li>
-            </ul>
+              ))}
+            </nav>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-200">
-          <div className="text-gray-600 mb-4 md:mb-0 flex items-center">
-            <Target className="w-5 h-5 mr-2 text-blue-600" />
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t">
+          <div className="text-sm text-muted-foreground mb-4 md:mb-0 flex items-center">
+            <Target className="h-4 w-4 mr-2 text-primary" />
             <span>© {currentYear} GoalWave. All rights reserved.</span>
           </div>
 
-          <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">Twitter</span>
-              <Twitter className="h-6 w-6" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">LinkedIn</span>
-              <Linkedin className="h-6 w-6" />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-gray-500">
-              <span className="sr-only">GitHub</span>
-              <Github className="h-6 w-6" />
-            </a>
+          <div className="flex space-x-4">
+            {[
+              { name: "Twitter", icon: <Twitter className="h-5 w-5" /> },
+              { name: "LinkedIn", icon: <Linkedin className="h-5 w-5" /> },
+              { name: "GitHub", icon: <Github className="h-5 w-5" /> },
+            ].map((item) => (
+              <a
+                key={item.name}
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+                aria-label={item.name}
+              >
+                {item.icon}
+              </a>
+            ))}
           </div>
         </div>
       </div>

@@ -5,13 +5,15 @@ import { User } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { supabase } from "../../supabase/supabase";
+import { Badge } from "./ui/badge";
 
 export default function PricingCard({
   item,
@@ -26,7 +28,7 @@ export default function PricingCard({
   const handleCheckout = async (priceId: string) => {
     if (!user) {
       // Redirect to login if user is not authenticated
-      window.location.href = "/login?redirect=pricing";
+      window.location.href = "/sign-in?redirect=pricing";
       return;
     }
 
@@ -62,44 +64,54 @@ export default function PricingCard({
     }
   };
 
+  // Define features based on plan type
+  const features = [
+    "Goal tracking",
+    "Progress visualization",
+    "Daily consistency tracking",
+  ];
+
+  if (item.name !== "Free") {
+    features.push("Unlimited goals", "Advanced analytics");
+  }
+
+  if (item.name === "Pro") {
+    features.push("Priority support");
+  }
+
   return (
-    <Card
-      className={`w-[350px] relative overflow-hidden ${item.popular ? "border-2 border-blue-500 shadow-xl scale-105" : "border border-gray-200"}`}
-    >
-      {item.popular && (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 opacity-30" />
-      )}
-      <CardHeader className="relative">
-        {item.popular && (
-          <div className="px-4 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full w-fit mb-4">
-            Most Popular
-          </div>
-        )}
-        <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
-          {item.name}
-        </CardTitle>
-        <CardDescription className="flex items-baseline gap-2 mt-2">
-          <span className="text-4xl font-bold text-gray-900">
-            ${item?.amount / 100}
-          </span>
-          <span className="text-gray-600">/{item?.interval}</span>
+    <Card className={`flex flex-col ${item.popular ? "border-primary" : ""}`}>
+      <CardHeader>
+        {item.popular && <Badge className="w-fit mb-2">Most Popular</Badge>}
+        <CardTitle>{item.name}</CardTitle>
+        <CardDescription>
+          <span className="text-3xl font-bold">${item?.amount / 100}</span>
+          <span className="text-muted-foreground ml-1">/{item?.interval}</span>
         </CardDescription>
       </CardHeader>
-      <CardFooter className="relative">
+      <CardContent className="flex-grow">
+        <ul className="space-y-2">
+          {features.map((feature, i) => (
+            <li key={i} className="flex items-center gap-2">
+              <Check className="h-4 w-4 text-primary" />
+              <span className="text-sm">{feature}</span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter>
         <Button
-          onClick={async () => {
-            await handleCheckout(item.id);
-          }}
-          className={`w-full py-6 text-lg font-medium gap-2`}
+          onClick={() => handleCheckout(item.id)}
+          className="w-full"
           disabled={isLoading}
         >
           {isLoading ? (
             <>
-              <Loader2 className="h-5 w-5 animate-spin" />
-              Processing...
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Processing
             </>
           ) : (
-            <>Get Started</>
+            "Get Started"
           )}
         </Button>
       </CardFooter>
