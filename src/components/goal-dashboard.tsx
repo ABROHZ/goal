@@ -77,7 +77,12 @@ export default function GoalDashboard() {
             createdAt: goal.created_at,
             lastUpdated: goal.last_updated,
           }));
-          setGoals(formattedGoals);
+          // Sort goals by createdAt date from latest to oldest
+          const sortedGoals = formattedGoals.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          );
+          setGoals(sortedGoals);
           // Also save to localStorage as backup
           localStorage.setItem("goals", JSON.stringify(formattedGoals));
         }
@@ -129,8 +134,14 @@ export default function GoalDashboard() {
         const newGoal = {
           ...goalData,
           id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
         };
-        setGoals([...goals, newGoal as Goal]);
+        // Add new goal and sort by date
+        const updatedGoals = [...goals, newGoal as Goal].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        setGoals(updatedGoals);
       } else if (data?.goal) {
         // Format the returned goal to match our interface
         const newGoal = {
@@ -143,7 +154,12 @@ export default function GoalDashboard() {
           createdAt: data.goal.created_at,
           lastUpdated: data.goal.last_updated,
         };
-        setGoals([...goals, newGoal as Goal]);
+        // Add new goal and sort by date
+        const updatedGoals = [...goals, newGoal as Goal].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        setGoals(updatedGoals);
         toast({
           title: "Goal created",
           description: "Your goal has been created successfully",
@@ -155,8 +171,14 @@ export default function GoalDashboard() {
       const newGoal = {
         ...goalData,
         id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
       };
-      setGoals([...goals, newGoal as Goal]);
+      // Add new goal and sort by date
+      const updatedGoals = [...goals, newGoal as Goal].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+      setGoals(updatedGoals);
     }
     setIsFormOpen(false);
   };

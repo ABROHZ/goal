@@ -57,29 +57,33 @@ export default function UserProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full relative h-10 w-10 border border-border bg-background hover:bg-accent hover:text-accent-foreground"
+        >
           {loading ? (
             <div className="animate-pulse">
-              <UserCircle className="h-8 w-8 text-muted-foreground" />
-              <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-blue-500 animate-ping"></span>
+              <UserCircle className="h-6 w-6 text-muted-foreground" />
+              <span className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-primary animate-ping"></span>
             </div>
           ) : (
-            <Avatar>
+            <Avatar className="h-9 w-9">
               <AvatarImage
                 src={user?.profile?.avatar_url || user?.profile?.image}
                 alt={user?.profile?.name || user?.email}
               />
-              <AvatarFallback className="bg-primary text-primary-foreground">
+              <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                 {getInitials(user?.profile?.name || user?.email || "")}
               </AvatarFallback>
             </Avatar>
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56 p-2">
         {user && (
           <>
-            <DropdownMenuLabel className="font-normal">
+            <DropdownMenuLabel className="font-normal p-2 rounded-md bg-muted/50">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
                   {user.profile?.name || user.email}
@@ -89,31 +93,31 @@ export default function UserProfile() {
                 </p>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="my-2" />
             <DropdownMenuItem
-              className="cursor-pointer"
+              className="cursor-pointer rounded-md flex items-center h-9 px-2"
               onClick={() => router.push("/dashboard")}
             >
               <Target className="mr-2 h-4 w-4" />
               My Goals
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="cursor-pointer"
+              className="cursor-pointer rounded-md flex items-center h-9 px-2"
               onClick={() => router.push("/achievements")}
             >
               <Award className="mr-2 h-4 w-4" />
               Achievements
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="cursor-pointer"
+              className="cursor-pointer rounded-md flex items-center h-9 px-2"
               onClick={() => router.push("/settings")}
             >
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="my-2" />
             <DropdownMenuItem
-              className="cursor-pointer text-red-500 focus:text-red-500"
+              className="cursor-pointer text-red-500 focus:text-red-500 rounded-md flex items-center h-9 px-2"
               onClick={async () => {
                 await supabase.auth.signOut();
                 router.push("/");

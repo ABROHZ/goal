@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { CheckCircle2, Award, AlertCircle } from "lucide-react";
+import { CheckCircle2, Award, AlertCircle, Target, Zap } from "lucide-react";
 
 interface Milestone {
   id: string;
@@ -78,144 +78,223 @@ export default function GoalProgressMap({
     return "#22c55e"; // green-500
   };
 
-  // Generate intermediate points for the path
-  const generateIntermediatePoints = (count: number) => {
-    const points = [];
-    const segmentSize = 100 / (count + 1);
+  // Generate dots for the path
+  const generateDots = (count: number) => {
+    const dots = [];
+    const segmentSize = 100 / (count - 1);
 
-    for (let i = 1; i <= count; i++) {
+    for (let i = 0; i < count; i++) {
       const position = segmentSize * i;
-      points.push({
-        id: `point-${i}`,
+      // Add some randomness to Y position to create a more natural path
+      const randomOffset = Math.sin(i * 0.5) * 15 + (Math.random() * 10 - 5);
+
+      // Every 5th dot is a challenge (larger, different style)
+      const isChallenge = i % 5 === 0 && i !== 0 && i !== count - 1;
+
+      dots.push({
+        id: `dot-${i}`,
         position,
+        yOffset: randomOffset,
         completed: position <= adjustedProgress,
+        isChallenge,
       });
     }
 
-    return points;
+    return dots;
   };
 
-  // Generate 15 intermediate points for more granular progress visualization
-  const intermediatePoints = generateIntermediatePoints(15);
+  // Generate 40 dots for the progress path
+  const dots = generateDots(40);
 
   return (
-    <Card className="w-full overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Award className="h-5 w-5 text-amber-500" />
-          Goal Progress Map
+    <Card className="w-full overflow-hidden bg-gray-900 border-2 border-gray-800">
+      <CardHeader className="pb-2 border-b border-gray-800">
+        <CardTitle className="text-lg flex items-center gap-2 text-gray-100">
+          <Target className="h-5 w-5 text-blue-400" />
+          Life's Journey Map
           {!checkIfLoggedToday(goal.lastUpdated) && (
-            <div className="ml-auto flex items-center text-xs text-amber-600 gap-1">
-              <AlertCircle className="h-4 w-4" />
+            <div className="ml-auto flex items-center text-xs text-amber-400 gap-1 bg-amber-950/50 px-2 py-1 rounded-full">
+              <AlertCircle className="h-3.5 w-3.5" />
               <span>Progress reduced (no daily log)</span>
             </div>
           )}
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <div className="relative h-32 w-full overflow-hidden bg-blue-50 rounded-lg">
-          {/* Wave Path */}
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 800 100"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient
-                id="progressGradient"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" stopColor="#3b82f6" />
-                <stop
-                  offset="100%"
-                  stopColor={getProgressColor(adjustedProgress)}
-                />
-              </linearGradient>
-            </defs>
-            <path
-              d="M0,50 C25,10 50,90 75,30 C100,70 125,10 150,50 C175,10 200,90 225,30 C250,70 275,10 300,50 C325,10 350,90 375,30 C400,70 425,10 450,50 C475,10 500,90 525,30 C550,70 575,10 600,50 C625,10 650,90 675,30 C700,70 725,10 750,50 C775,10 800,50 800,50"
-              fill="none"
-              stroke="#dbeafe"
-              strokeWidth="4"
-            />
-            <path
-              d="M0,50 C25,10 50,90 75,30 C100,70 125,10 150,50 C175,10 200,90 225,30 C250,70 275,10 300,50 C325,10 350,90 375,30 C400,70 425,10 450,50 C475,10 500,90 525,30 C550,70 575,10 600,50 C625,10 650,90 675,30 C700,70 725,10 750,50 C775,10 800,50 800,50"
-              fill="none"
-              stroke="url(#progressGradient)"
-              strokeWidth="4"
-              strokeDasharray="800"
-              strokeDashoffset={800 - (800 * animateProgress) / 100}
-              className="transition-all duration-1000 ease-in-out"
-            />
-          </svg>
+      <CardContent className="pt-4">
+        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-950 border border-gray-800 shadow-inner">
+          {/* Star-like background */}
+          <div className="absolute inset-0">
+            {Array.from({ length: 50 }).map((_, i) => (
+              <div
+                key={`star-${i}`}
+                className="absolute w-0.5 h-0.5 bg-gray-500 rounded-full animate-pulse"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  opacity: Math.random() * 0.7 + 0.3,
+                }}
+              />
+            ))}
+          </div>
 
-          {/* Progress Dot */}
-          <div
-            className="absolute top-0 w-6 h-6 rounded-full shadow-md transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transition-all duration-1000 ease-in-out z-10"
-            style={{
-              left: `${animateProgress}%`,
-              top: `${50 - Math.sin((animateProgress / 100) * Math.PI * 4) * 40}%`,
-              backgroundColor: getProgressColor(adjustedProgress),
-            }}
-          >
-            <div className="w-2 h-2 bg-white rounded-full"></div>
+          {/* Grid lines */}
+          <div className="absolute inset-0 grid grid-cols-10 grid-rows-6">
+            {Array.from({ length: 60 }).map((_, i) => (
+              <div
+                key={`grid-${i}`}
+                className="border-[0.5px] border-gray-800/30"
+              />
+            ))}
           </div>
 
           {/* Start Point */}
-          <div className="absolute left-0 top-1/2 w-3 h-3 bg-gray-400 rounded-full transform -translate-y-1/2"></div>
+          <div className="absolute left-0 top-1/2 w-5 h-5 bg-blue-500 rounded-full transform -translate-y-1/2 -translate-x-1/2 border-2 border-gray-900 shadow-md z-20">
+            <div className="absolute inset-0 bg-blue-400 rounded-full animate-ping opacity-50"></div>
+          </div>
 
-          {/* End Point */}
-          <div className="absolute right-0 top-1/2 w-3 h-3 bg-green-500 rounded-full transform -translate-y-1/2"></div>
+          {/* End Point - Award Icon */}
+          <div className="absolute right-0 top-1/2 w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full transform -translate-y-1/2 translate-x-1/2 border-2 border-gray-900 shadow-md z-20 flex items-center justify-center">
+            <Award className="w-5 h-5 text-gray-900" />
+            <div className="absolute inset-0 bg-amber-500 rounded-full animate-pulse opacity-30"></div>
+          </div>
 
-          {/* Intermediate Points */}
-          {intermediatePoints.map((point) => (
+          {/* Progress Dots */}
+          {dots.map((dot, index) => {
+            // Calculate the size based on completion and challenge status
+            const size = dot.isChallenge ? 8 : dot.completed ? 4 : 3;
+            const opacity = dot.completed ? 1 : 0.3;
+
+            // Determine color based on completion and challenge status
+            let bgColor = dot.completed
+              ? getProgressColor(dot.position)
+              : "#4b5563"; // gray-600
+
+            // Special styling for challenge dots
+            let borderColor = "transparent";
+            let shadowColor = "transparent";
+            let zIndex = 5;
+
+            if (dot.isChallenge) {
+              bgColor = dot.completed ? "#8b5cf6" : "#4b5563"; // purple-500 if completed
+              borderColor = dot.completed ? "#c4b5fd" : "#6b7280"; // purple-200 : gray-500
+              shadowColor = dot.completed
+                ? "rgba(139, 92, 246, 0.5)"
+                : "transparent";
+              zIndex = 10;
+            }
+
+            return (
+              <div
+                key={dot.id}
+                className={`absolute rounded-full transition-all duration-500`}
+                style={{
+                  left: `${dot.position}%`,
+                  top: `${50 + dot.yOffset}%`,
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  backgroundColor: bgColor,
+                  opacity,
+                  transform: "translate(-50%, -50%)",
+                  border: dot.isChallenge ? `2px solid ${borderColor}` : "none",
+                  boxShadow: dot.isChallenge
+                    ? `0 0 10px 2px ${shadowColor}`
+                    : "none",
+                  zIndex,
+                }}
+              >
+                {dot.isChallenge && dot.completed && (
+                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                    <Zap className="h-4 w-4 text-purple-400" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {/* Current Progress Indicator */}
+          {animateProgress > 0 && (
             <div
-              key={point.id}
-              className={`absolute w-2.5 h-2.5 rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-colors duration-500 ${point.completed ? "bg-blue-500" : "bg-gray-300"}`}
+              className="absolute top-0 w-6 h-6 rounded-full shadow-lg transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center transition-all duration-1000 ease-in-out z-30"
               style={{
-                left: `${point.position}%`,
-                top: `${50 - Math.sin((point.position / 100) * Math.PI * 4) * 40}%`,
-                zIndex: 5,
+                left: `${animateProgress}%`,
+                top: `${50 + Math.sin(animateProgress * 0.1) * 15}%`,
+                background: `radial-gradient(circle at center, ${getProgressColor(adjustedProgress)}, ${getProgressColor(adjustedProgress)}cc)`,
+                boxShadow: `0 0 15px 3px ${getProgressColor(adjustedProgress)}80`,
               }}
-            />
-          ))}
+            >
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          )}
 
           {/* Milestone Markers */}
           {goal.milestones.map((milestone, index) => {
             const position = ((index + 1) / (goal.milestones.length + 1)) * 100;
+            const yOffset =
+              Math.sin(position * 0.1) * 15 + (Math.random() * 6 - 3);
+
             return (
               <div
                 key={milestone.id}
-                className={`absolute w-5 h-5 rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer transition-colors duration-300 ${milestone.completed ? "bg-green-500" : "bg-gray-300"}`}
+                className={`absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-20 transition-transform duration-300 hover:scale-110 cursor-pointer group`}
                 style={{
                   left: `${position}%`,
-                  top: `${50 - Math.sin((position / 100) * Math.PI * 4) * 40}%`,
-                  zIndex: 10,
+                  top: `${50 + yOffset}%`,
                 }}
                 onClick={() => onMilestoneClick?.(milestone.id)}
                 title={milestone.title}
               >
-                {milestone.completed && (
-                  <CheckCircle2 className="w-3 h-3 text-white" />
-                )}
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center border-2 ${milestone.completed ? "border-purple-400 bg-purple-600" : "border-gray-600 bg-gray-700"} shadow-md transition-colors duration-300`}
+                >
+                  {milestone.completed && (
+                    <CheckCircle2 className="w-4 h-4 text-white" />
+                  )}
+                </div>
+                <div className="absolute -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-30">
+                  {milestone.title}
+                </div>
               </div>
             );
           })}
         </div>
 
-        <div className="mt-4 flex justify-between items-center text-sm">
-          <div className="text-muted-foreground">Start</div>
+        <div className="mt-4 flex justify-between items-center text-sm text-gray-300">
+          <div className="flex flex-col items-center">
+            <div className="text-blue-400 font-medium">Start</div>
+            <div className="text-xs text-gray-500">Day 1</div>
+          </div>
           <div
-            className="font-medium"
-            style={{ color: getProgressColor(progressPercentage) }}
+            className={`font-medium px-3 py-1 rounded-full text-gray-900 transition-colors duration-300`}
+            style={{ backgroundColor: getProgressColor(progressPercentage) }}
           >
             {progressPercentage}% Complete
           </div>
-          <div className="text-muted-foreground">Goal</div>
+          <div className="flex flex-col items-center">
+            <div className="text-amber-400 font-medium">Goal</div>
+            <div className="text-xs text-gray-500">Achievement</div>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div className="mt-4 pt-3 border-t border-gray-800 flex flex-wrap gap-4 justify-center">
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span>Progress Dots</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="w-3 h-3 bg-purple-600 rounded-full border border-purple-400"></div>
+            <span>Challenge Point</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
+            <span>Milestone</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <Award className="w-3 h-3 text-amber-400" />
+            <span>Achievement</span>
+          </div>
         </div>
       </CardContent>
     </Card>
