@@ -91,12 +91,17 @@ export default function GoalProgressMap({
       // Every 5th dot is a challenge (larger, different style)
       const isChallenge = i % 5 === 0 && i !== 0 && i !== count - 1;
 
+      // Add random challenge dots (red dots)
+      const isRandomChallenge =
+        Math.random() < 0.15 && !isChallenge && i !== 0 && i !== count - 1;
+
       dots.push({
         id: `dot-${i}`,
         position,
         yOffset: randomOffset,
         completed: position <= adjustedProgress,
         isChallenge,
+        isRandomChallenge,
       });
     }
 
@@ -163,7 +168,13 @@ export default function GoalProgressMap({
           {/* Progress Dots */}
           {dots.map((dot, index) => {
             // Calculate the size based on completion and challenge status
-            const size = dot.isChallenge ? 8 : dot.completed ? 4 : 3;
+            const size = dot.isChallenge
+              ? 8
+              : dot.isRandomChallenge
+                ? 6
+                : dot.completed
+                  ? 4
+                  : 3;
             const opacity = dot.completed ? 1 : 0.3;
 
             // Determine color based on completion and challenge status
@@ -175,6 +186,16 @@ export default function GoalProgressMap({
             let borderColor = "transparent";
             let shadowColor = "transparent";
             let zIndex = 5;
+
+            // Random challenge dots are red
+            if (dot.isRandomChallenge) {
+              bgColor = dot.completed ? "#ef4444" : "#4b5563"; // red-500 if completed
+              borderColor = dot.completed ? "#fca5a5" : "#6b7280"; // red-300 : gray-500
+              shadowColor = dot.completed
+                ? "rgba(239, 68, 68, 0.5)"
+                : "transparent";
+              zIndex = 8;
+            }
 
             if (dot.isChallenge) {
               bgColor = dot.completed ? "#8b5cf6" : "#4b5563"; // purple-500 if completed
@@ -197,16 +218,25 @@ export default function GoalProgressMap({
                   backgroundColor: bgColor,
                   opacity,
                   transform: "translate(-50%, -50%)",
-                  border: dot.isChallenge ? `2px solid ${borderColor}` : "none",
-                  boxShadow: dot.isChallenge
-                    ? `0 0 10px 2px ${shadowColor}`
-                    : "none",
+                  border:
+                    dot.isChallenge || dot.isRandomChallenge
+                      ? `2px solid ${borderColor}`
+                      : "none",
+                  boxShadow:
+                    dot.isChallenge || dot.isRandomChallenge
+                      ? `0 0 10px 2px ${shadowColor}`
+                      : "none",
                   zIndex,
                 }}
               >
                 {dot.isChallenge && dot.completed && (
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
                     <Zap className="h-4 w-4 text-purple-400" />
+                  </div>
+                )}
+                {dot.isRandomChallenge && dot.completed && (
+                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2">
+                    <AlertCircle className="h-3 w-3 text-red-400" />
                   </div>
                 )}
               </div>
@@ -286,6 +316,10 @@ export default function GoalProgressMap({
           <div className="flex items-center gap-1.5 text-xs text-gray-400">
             <div className="w-3 h-3 bg-purple-600 rounded-full border border-purple-400"></div>
             <span>Challenge Point</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="w-3 h-3 bg-red-500 rounded-full border border-red-300"></div>
+            <span>Life Challenge</span>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-gray-400">
             <div className="w-3 h-3 bg-purple-600 rounded-full"></div>
